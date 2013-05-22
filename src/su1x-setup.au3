@@ -1296,12 +1296,11 @@ EndFunc   ;==>SetHotkeyAuth
 DoDebug("***Starting SU1X***")
 CheckAdmin()
 alreadyRunning()
-GUICreate($title, 410, 370)
+GUICreate($title, 410, 440)
 GUISetBkColor(0xffffff) ;---------------------------------white
 
 $n = GUICtrlCreatePic($BANNER, 0, 0, 410, 200) ;--------pic
 If ($showup > 0) Then
-	$myedit = "";GUICtrlCreateEdit($startText, -1, 10, 270, 70, $ES_MULTILINE + $ES_AUTOVSCROLL + $WS_VSCROLL + $ES_READONLY)
 	;GUICtrlSetPos ( $myedit, 10)
 	GUICtrlCreateLabel("Username:", 10, 214, 100, 20)
 	$userbutton = GUICtrlCreateInput($username, 110, 210, 290, 24)
@@ -1312,7 +1311,10 @@ If ($showup > 0) Then
 	If ($showuptick > 0) Then
 		GUICtrlSetPos ( $passbutton,110,240,180,24)
 		$showPass = GUICtrlCreateCheckbox("Show Password",  300, 240, 120, 24)
+
 	EndIf
+	$myedit = GUICtrlCreateEdit($startText, 1, 372, 408, 70, $ES_MULTILINE + $ES_AUTOVSCROLL + $WS_VSCROLL + $ES_READONLY)
+
 Else
 	$showuptick = 0
 	;showuptick must be 0 if showup 0, force set to avoid bad config
@@ -1417,7 +1419,11 @@ While 1
 			; Start Installation
 			GUICtrlSetData($progressbar1, 0)
 			$progress_meter = 0;
-			UpdateOutput("***Starting Installation***")
+			DoDebug("***Starting Installation***")
+
+			If UserChecks() = 1 Then
+				ExitLoop
+			EndIf
 
 			Local $probconnect = 0
 			$os = GetOSVersion()
@@ -1621,41 +1627,23 @@ While 1
 			$progress_meter = 0;
 			;read in username and password
 			If ($showup > 0) Then
-				$user = GUICtrlRead($userbutton) & "@" & $domain
+				$user = GUICtrlRead($userbutton)
 				$pass = GUICtrlRead($passbutton)
 			EndIf
 			UpdateOutput("***Starting Checks***")
 
 			If ($msg == $gethelp) Then
-				;check username
-				If (StringInStr($user, "123456") > 0 Or StringLen($user) < 1) Then
-					ResetProgress()
-					UpdateOutput("ERROR: Please enter a username")
+				If UserChecks() = 1 Then
 					ExitLoop
 				EndIf
 
-				;check password
-				If (StringLen($pass) < 1) Then
-					ResetProgress()
-					UpdateOutput("ERROR: Please enter a password")
-					ExitLoop
-				EndIf
-
-				If (StringLen($SSID_Fallback) > 0) Then
-					DoDebug("***GET HELP***")
-					UpdateOutput("***Connecting to fallback:" & $SSID_Fallback & "***")
-					UpdateProgress(20)
-					If (Not (FallbackConnect())) Then
-						ResetProgress()
-						UpdateOutput("Failed to connect to fallback network:" & $SSID_Fallback)
-						ExitLoop
-					EndIf
-				EndIf
 
 				;doGetHelpInfo()
 				;$probdesc = GUICtrlRead($probdesc)
 				;DoDebug("[support]Prob Description=" & $probdesc)
 			EndIf
+
+			$user = $user & "@" & $domain
 
 
 
@@ -2311,4 +2299,30 @@ EndFunc   ;==>DoBeforeExit
 
 Func ResetProgress()
 	GUICtrlSetData($progressbar1, 0)
+EndFunc
+
+Func UserChecks()
+		Local $error = 0
+		If (StringInStr($user, $username) > 0 Or StringLen($user) < 1) Then
+			;check username
+			ResetProgress()
+			UpdateOutput("ERROR: Please enter a username")
+			$error = 1
+		ElseIf (StringLen($pass) < 1) Then
+			;check password
+			ResetProgress()
+			UpdateOutput("ERROR: Please enter a password")
+			$error = 1
+		ElseIf (StringLen($SSID_Fallback) > 0) Then
+			DoDebug("***GET HELP***")
+			UpdateOutput("***Connecting to fallback:" & $SSID_Fallback & "***")
+			UpdateProgress(20)
+			If (Not (FallbackConnect())) Then
+				ResetProgress()
+				UpdateOutput("Failed to connect to fallback network:" & $SSID_Fallback)
+				$error = 1
+			EndIf
+		EndIf
+
+		Return $error
 EndFunc
