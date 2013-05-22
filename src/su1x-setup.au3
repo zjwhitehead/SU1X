@@ -51,6 +51,7 @@
 #include <GuiListView.au3>
 #include <String.au3>
 
+
 OnAutoItExitRegister("DoBeforeExit")
 
 ;-------------------------------------------------------------------------
@@ -67,6 +68,7 @@ If (FileExists($CONFIGFILE) == 0) Then
 EndIf
 
 $WZCSVCStarted = 0
+$cleangui = IniRead($CONFIGFILE, "su1x", "cleangui", "0")
 $SECURE_MACHINE = IniRead($CONFIGFILE, "su1x", "SECURE_MACHINE", "0")
 $DEBUG = IniRead($CONFIGFILE, "su1x", "DEBUG", "0")
 $wireless = IniRead($CONFIGFILE, "su1x", "wireless", "1")
@@ -392,7 +394,7 @@ Func CheckService($ServiceName)
 		_Wlan_SetInterface($hClientHandle, $pGUID, 0, "Auto Config Enabled")
 		If IsServiceRunning($ServiceName) == 0 Then
 			UpdateOutput("******Problem starting service:" & $ServiceName)
-			UpdateProgress(5);
+			ResetProgress()
 			DoDebug("[CheckService]" & $ServiceName & " start failure")
 			Return 0
 		Else
@@ -452,10 +454,12 @@ Func WlanAPICheck()
 		ElseIf (UBound($Enum) == 0) Then
 			UpdateOutput("***Wireless Adapter Problem")
 			MsgBox(16, "Error", "No Wireless Adapter Found.")
+			ResetProgress()
 			Return 0
 		ElseIf (StringLen($Enum[0][1]) < 1) Then
 			UpdateOutput("***Wireless Adapter Problem")
 			MsgBox(16, "Error", "No Wireless Adapter Found.")
+			ResetProgress()
 			Return 0
 		Else
 			Return 1
@@ -668,7 +672,7 @@ EndFunc   ;==>IsServiceRunning
 ;updates the progress bar by x percent
 Func UpdateProgress($percent)
 	$progress_meter = $progress_meter + $percent
-	GUICtrlSetData($progressbar1, $progress_meter)
+	GUICtrlSetData($progressbar1, $percent)
 EndFunc   ;==>UpdateProgress
 
 ;output to edit box
@@ -945,14 +949,14 @@ Func SetEAPCred($thessid, $inttype, $interface)
 
 		;check username
 		If (StringInStr($user, "123456") > 0 Or StringLen($user) < 1) Then
-			UpdateProgress(10)
+			ResetProgress()
 			UpdateOutput("ERROR: Please enter a username")
 			Return 0
 		EndIf
 
 		;check password
 		If (StringLen($pass) < 1) Then
-			UpdateProgress(10)
+			ResetProgress()
 			UpdateOutput("ERROR: Please enter a password")
 			Return 0
 		EndIf
@@ -1292,55 +1296,56 @@ EndFunc   ;==>SetHotkeyAuth
 DoDebug("***Starting SU1X***")
 CheckAdmin()
 alreadyRunning()
-GUICreate($title, 294, 310)
+GUICreate($title, 410, 370)
 GUISetBkColor(0xffffff) ;---------------------------------white
-$n = GUICtrlCreatePic($BANNER, 0, 0, 295, 60) ;--------pic
+
+$n = GUICtrlCreatePic($BANNER, 0, 0, 410, 200) ;--------pic
 If ($showup > 0) Then
-	$myedit = GUICtrlCreateEdit($startText, 10, 70, 270, 70, $ES_MULTILINE + $ES_AUTOVSCROLL + $WS_VSCROLL + $ES_READONLY)
-	GUICtrlCreateLabel("Username:", 10, 145, 60, 20)
-	GUICtrlCreateLabel("Password:", 165, 145, 60, 20)
-	$userbutton = GUICtrlCreateInput($username, 10, 160, 150, 20)
-	$passbutton = GUICtrlCreateInput("", 165, 160, 120, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_PASSWORD))
+	$myedit = "";GUICtrlCreateEdit($startText, -1, 10, 270, 70, $ES_MULTILINE + $ES_AUTOVSCROLL + $WS_VSCROLL + $ES_READONLY)
+	;GUICtrlSetPos ( $myedit, 10)
+	GUICtrlCreateLabel("Username:", 10, 214, 100, 20)
+	$userbutton = GUICtrlCreateInput($username, 110, 210, 290, 24)
+	GUICtrlCreateLabel("Password:", 10, 244, 100, 20)
+	$passbutton = GUICtrlCreateInput("", 110, 240, 290, 24, BitOR($GUI_SS_DEFAULT_INPUT, $ES_PASSWORD))
 	GUICtrlSendMsg($passbutton, 0x00CC, 42, 0)
 	;GUICtrlSetData($passbutton, $GUI_FOCUS)
 	If ($showuptick > 0) Then
-		$showPass = GUICtrlCreateCheckbox("Show Password", 170, 185, 100, 20)
+		GUICtrlSetPos ( $passbutton,110,240,180,24)
+		$showPass = GUICtrlCreateCheckbox("Show Password",  300, 240, 120, 24)
 	EndIf
 Else
 	$showuptick = 0
 	;showuptick must be 0 if showup 0, force set to avoid bad config
-	$myedit = GUICtrlCreateEdit($startText, 10, 70, 270, 130, $ES_MULTILINE + $ES_AUTOVSCROLL + $WS_VSCROLL + $ES_READONLY)
+	$myedit = ""; GUICtrlCreateEdit($startText, 10, 70, 270, 130, $ES_MULTILINE + $ES_AUTOVSCROLL + $WS_VSCROLL + $ES_READONLY)
 EndIf
-GUICtrlCreateLabel("Progress:", 15, 210, 48, 20)
-$progressbar1 = GUICtrlCreateProgress(65, 210, 200, 20)
+
+$progressbar1 = GUICtrlCreateProgress(10, 274, 390, 20)
+
 ;-------------------------------------------------------------------------
 ;TABS
-$tab = GUICtrlCreateTab(1, 240, 292, 70)
+$tab = GUICtrlCreateTab(1, 304, 450, 70)
 ;only show this tab if argument set by scheduled task
 If (StringInStr($argument1, "auth") > 0) Then
 	;-------------------------Connect Tab
 	$tab0 = GUICtrlCreateTabItem("Connect")
-	$tryconnect = GUICtrlCreateButton("Reconnect to " & $SSID, 60, 270, 150)
+	$tryconnect = GUICtrlCreateButton("Reconnect to " & $SSID, 60, 334, 150)
 	;GUICtrlSetState(-1, $GUI_SHOW); will be display first
 EndIf
 ;--------------------------Setup Tab
 $tab1 = GUICtrlCreateTabItem("Setup")
-$installb = GUICtrlCreateButton("Start Setup", 10, 270, 80)
+$installb = GUICtrlCreateButton("Start Setup", 10, 334, 80)
+GUICtrlSetState ( $installb, $GUI_DEFBUTTON )
 $remove_width = StringLen($SSID) * 10
-If ($remove_width < 90) Then
-	$remove_wifi = GUICtrlCreateButton("Remove " & $SSID, 95, 270, 50 + $remove_width)
-Else
-	$remove_wifi = GUICtrlCreateButton("Remove", 95, 270, 90)
-EndIf
+$remove_wifi = GUICtrlCreateButton("Remove " & $SSID, 95, 334, 10 + $remove_width)
 ;--------------------------Printing Tab
 $tab2 = GUICtrlCreateTabItem("Printing")
-$print = GUICtrlCreateButton("Setup Printer", 10, 270, 80)
-$remove_printer = GUICtrlCreateButton("Remove Printer", 100, 270, 90)
+$print = GUICtrlCreateButton("Setup Printer", 10, 334, 80)
+$remove_printer = GUICtrlCreateButton("Remove Printer", 100, 334, 90)
 ;--------------------------Support Tab
 $tab3 = GUICtrlCreateTabItem("Help")
-$support = GUICtrlCreateButton("Start Checks", 10, 270, 80)
+$support = GUICtrlCreateButton("Start Checks", 10, 334, 80)
 ;$reset = GUICtrlCreateButton("IP Reset", 100, 270, 80)
-$gethelp = GUICtrlCreateButton("Get Help", 100, 270, 80)
+$gethelp = GUICtrlCreateButton("Get Help", 100, 334, 80)
 ;--------------------------
 $tab = GUICtrlCreateTabItem("")
 ;--------------------------End of Tabs
@@ -1348,6 +1353,8 @@ If ($show_printing == 0) Then GUICtrlDelete($tab2)
 If ($show_support == 0) Then GUICtrlDelete($tab3)
 ;$unInstallb = GUICtrlCreateButton("Remove", 80, 280, 50)
 ;$backupb = GUICtrlCreateButton("Check", 160,280,50)
+
+
 
 ;set hotkey for enter press, so connected on enter press
 Local $AccelKeys[1][2] = [["{ENTER}", $installb]]
@@ -1579,12 +1586,14 @@ While 1
 
 			;-----------------------------------END CODE
 			UpdateOutput("***Setup Complete***")
+			UpdateProgress(10);
 			If ($probconnect > 0) Then
 				UpdateOutput("***POSSIBLE PROBLEM CONNECTING...")
 				CloseConnectWindows()
 				TrayTip($SSID & " Failed", "Check your username and password then click Start Setup again.", 30, 3)
+				ResetProgress()
 			EndIf
-			UpdateProgress(10);
+
 			GUICtrlSetData($progressbar1, 100)
 			If ($hint == 1 And ($probconnect > 0 Or $scheduletask == 0)) Then doHint()
 			;Setup all done, display hint if hint set and turn off splash if on
@@ -1620,14 +1629,14 @@ While 1
 			If ($msg == $gethelp) Then
 				;check username
 				If (StringInStr($user, "123456") > 0 Or StringLen($user) < 1) Then
-					UpdateProgress(100)
+					ResetProgress()
 					UpdateOutput("ERROR: Please enter a username")
 					ExitLoop
 				EndIf
 
 				;check password
 				If (StringLen($pass) < 1) Then
-					UpdateProgress(100)
+					ResetProgress()
 					UpdateOutput("ERROR: Please enter a password")
 					ExitLoop
 				EndIf
@@ -1637,6 +1646,7 @@ While 1
 					UpdateOutput("***Connecting to fallback:" & $SSID_Fallback & "***")
 					UpdateProgress(20)
 					If (Not (FallbackConnect())) Then
+						ResetProgress()
 						UpdateOutput("Failed to connect to fallback network:" & $SSID_Fallback)
 						ExitLoop
 					EndIf
@@ -1686,11 +1696,12 @@ While 1
 			If ($WZCSVCStarted) Then
 				UpdateOutput("Wireless Service OK")
 				$output &= "Wireless Service [OK]" & @CRLF
+				UpdateProgress(10);
 			Else
 				UpdateOutput("***Wireless Service Problem")
 				$output &= "Wireless Service [FAIL]" & @CRLF & "Possible other software managing wireless adapter, not Windows" & @CRLF & @CRLF
+				ResetProgress()
 			EndIf
-			UpdateProgress(10);
 
 			If (Not (WlanAPIConnect())) Then
 				If (Not (WlanAPICheck())) Then
@@ -1704,11 +1715,12 @@ While 1
 			If ($wifi_card) Then
 				UpdateOutput("Wireless Adapter OK")
 				$output &= "Wireless Adapter [OK]" & @CRLF
+				UpdateProgress(10);
 			Else
 				UpdateOutput("***Wireless Adapter Problem")
 				$output &= "Wireless Adapter [FAIL]" & @CRLF & "No wireless adapter found. Make sure wifi switch is on" & @CRLF & @CRLF
+				ResetProgress();
 			EndIf
-			UpdateProgress(10);
 
 
 			If ($wifi_card) Then
@@ -1735,11 +1747,12 @@ While 1
 				If ($findProfile) Then
 					UpdateOutput("Wireless Profile " & $SSID & " OK")
 					$output &= "Wireless Profile [OK]" & @CRLF
+					UpdateProgress(10);
 				Else
 					UpdateOutput("***Wireless Profile " & $SSID & " Missing")
 					$output &= "Wireless Setup [FAIL]" & @CRLF & $SSID & " profile missing, run setup tool again." & @CRLF & @CRLF
+					ResetProgress()
 				EndIf
-				UpdateProgress(10);
 				$wifi_state = _Wlan_QueryInterface($hClientHandle, $pGUID, 2)
 				If (StringInStr($wifi_state, "Dis") Or ($wifi_state == 0)) Then
 					;do some thing
@@ -1820,6 +1833,7 @@ While 1
 							DoDebug("[support]Error with https")
 							UpdateOutput("****Wireless Login Test Connection Error")
 							$output &= "Wireless Loging Test [FAIL]" & @CRLF & "No connection to Intranet." & @CRLF & @CRLF
+							ResetProgress()
 						EndIf
 						$response = BinaryToString($response)
 						$response2 = $response
@@ -1828,21 +1842,24 @@ While 1
 						If (StringInStr($response, "Accepted", 0)) Then
 							UpdateOutput("Wireless Username/Password OK")
 							$output &= "Wireless Username/Password [OK]" & @CRLF
+							UpdateProgress(10)
 						EndIf
 						If (StringInStr($response, "Username not found on LDAP", 0)) Then
 							UpdateOutput("****Wireless Username Error")
 							$output &= "Wireless Username [FAIL]" & @CRLF & "Username " & $user & "is not correct, or not found on wireless servers." & @CRLF & @CRLF
+							ResetProgress()
 						EndIf
 						If (StringInStr($response, "Ambigious result", 0)) Then
 							UpdateOutput("****Wireless Username Error Ambigious")
 							$output &= "Wireless Username [FAIL]" & @CRLF & "Ambigious result. Please see IT Support." & @CRLF & @CRLF
+							ResetProgress()
 						EndIf
 						If (StringInStr($response, "Password Incorrect", 0)) Then
 							UpdateOutput("****Wireless Password Incorrect")
 							$output &= "Wireless Password [FAIL]" & @CRLF & "Incorrect password." & @CRLF
-							;$output &= "Wireless Password [FAIL]" & @CRLF & "The username is correct, but the password is not correct." & @CRLF & @CRLF
+							ResetProgress()
 						EndIf
-						UpdateProgress(10)
+
 
 						;-------------------------------------------------------------------------Check Registration tables
 						Dim $regtest = ""
@@ -1853,6 +1870,7 @@ While 1
 							DoDebug("[support]Error with reg https")
 							UpdateOutput("****Wireless Reg Test Connection Error")
 							$output &= "Wireless Registration Test [FAIL]" & @CRLF & "No connection to Intranet." & @CRLF & @CRLF
+							ResetProgress()
 						EndIf
 						$regtest = BinaryToString($regtest)
 						$regtest2 = $regtest
@@ -1861,30 +1879,36 @@ While 1
 						If (StringInStr($regtest, "Registration OK", 0)) Then
 							UpdateOutput("Wireless Registration OK")
 							$output &= "Wireless Registartion [OK]" & @CRLF
+							UpdateProgress(10)
 						EndIf
 						If (StringInStr($regtest, "Device not in DHCP table", 0)) Then
 							UpdateOutput("****Registration Error:DHCP table")
 							$output &= "Wireless Registartion [FAIL]" & @CRLF & "Device missing from DHCP. Reregister or see IT Support." & @CRLF & @CRLF
+							ResetProgress()
 						EndIf
 						If (StringInStr($regtest, "Device Not Registered", 0)) Then
 							UpdateOutput("****Registration Error: Not Registered")
 							$output &= "Wireless Registartion [FAIL]" & @CRLF & "Device not Registerd. Please regsiter this device." & @CRLF & @CRLF
+							ResetProgress()
 						EndIf
 						If (StringInStr($regtest, "Database Failure (usergroup)", 0)) Then
 							UpdateOutput("****Registration Error: User not in DB")
 							$output &= "Wireless Registartion [FAIL]" & @CRLF & $user & " not found on wireles system." & @CRLF & @CRLF
+							ResetProgress()
 						EndIf
 						If (StringInStr($regtest, "Database Failure (ambigious username)", 0)) Then
 							UpdateOutput("****Registration Error: Ambigious username")
 							$output &= "Wireless Registartion [FAIL]" & @CRLF & $user & " ambigious. Please see IT Support." & @CRLF & @CRLF
+							ResetProgress()
 						EndIf
 						If (StringInStr($regtest, "Mac/User mismatch", 0)) Then
 							UpdateOutput("****Registration Error: MAC Device Mismatch")
 							$output &= "Wireless Registartion [FAIL]" & @CRLF & $user & " not registered keeper of this device." & @CRLF & @CRLF
+							ResetProgress()
 						EndIf
 					EndIf
 					;response to YES or NO msg box
-					UpdateProgress(10)
+
 
 					DoDebug("[support]send problem =" & $send_problem)
 					If ($send_problem == 1 And $ynresponse = 6 And $msg == $gethelp) Then
@@ -2284,3 +2308,7 @@ Func DoBeforeExit()
 		DoDump($debugResult)
 	EndIf
 EndFunc   ;==>DoBeforeExit
+
+Func ResetProgress()
+	GUICtrlSetData($progressbar1, 0)
+EndFunc
