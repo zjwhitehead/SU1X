@@ -1313,14 +1313,13 @@ If ($showup > 0) Then
 		$showPass = GUICtrlCreateCheckbox("Show Password",  300, 240, 120, 24)
 
 	EndIf
-	$myedit = GUICtrlCreateEdit($startText, 1, 372, 408, 70, $ES_MULTILINE + $ES_AUTOVSCROLL + $WS_VSCROLL + $ES_READONLY)
+
 
 Else
 	$showuptick = 0
 	;showuptick must be 0 if showup 0, force set to avoid bad config
-	$myedit = ""; GUICtrlCreateEdit($startText, 10, 70, 270, 130, $ES_MULTILINE + $ES_AUTOVSCROLL + $WS_VSCROLL + $ES_READONLY)
 EndIf
-
+$myedit = GUICtrlCreateEdit($startText, 1, 372, 408, 70, $ES_MULTILINE + $ES_AUTOVSCROLL + $WS_VSCROLL + $ES_READONLY)
 $progressbar1 = GUICtrlCreateProgress(10, 274, 390, 20)
 
 ;-------------------------------------------------------------------------
@@ -1338,7 +1337,7 @@ $tab1 = GUICtrlCreateTabItem("Setup")
 $installb = GUICtrlCreateButton("Start Setup", 10, 334, 80)
 GUICtrlSetState ( $installb, $GUI_DEFBUTTON )
 $remove_width = StringLen($SSID) * 10
-$remove_wifi = GUICtrlCreateButton("Remove " & $SSID, 95, 334, 10 + $remove_width)
+$remove_wifi = GUICtrlCreateButton("Remove " & $SSID, 95, 334, 10 + (1.2* $remove_width))
 ;--------------------------Printing Tab
 $tab2 = GUICtrlCreateTabItem("Printing")
 $print = GUICtrlCreateButton("Setup Printer", 10, 334, 80)
