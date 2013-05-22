@@ -6,7 +6,7 @@
 #AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=Swansea Eduroam Tool
 #AutoIt3Wrapper_Res_Description=Swansea Eduroam Tool
-#AutoIt3Wrapper_Res_Fileversion=2.0.0.32
+#AutoIt3Wrapper_Res_Fileversion=2.0.0.34
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_ProductVersion=1.8.0.0
 #AutoIt3Wrapper_Res_LegalCopyright=Gareth Ayres - Swansea University
@@ -943,21 +943,8 @@ Func SetEAPCred($thessid, $inttype, $interface)
 		Dim $pass = GUICtrlRead($passbutton)
 		;additional regex from ini maybe?
 
-		; support old style username, ignoring everything past @
-		$user = StringSplit($user, "@")
-		$user = $user[1]
 
-		;check username
-		If (StringInStr($user, "123456") > 0 Or StringLen($user) < 1) Then
-			ResetProgress()
-			UpdateOutput("ERROR: Please enter a username")
-			Return 0
-		EndIf
-
-		;check password
-		If (StringLen($pass) < 1) Then
-			ResetProgress()
-			UpdateOutput("ERROR: Please enter a password")
+		If UserChecks() = 1 Then
 			Return 0
 		EndIf
 		Local $credentials[4]
@@ -1309,8 +1296,8 @@ If ($showup > 0) Then
 	GUICtrlSendMsg($passbutton, 0x00CC, 42, 0)
 	;GUICtrlSetData($passbutton, $GUI_FOCUS)
 	If ($showuptick > 0) Then
-		GUICtrlSetPos ( $passbutton,110,240,180,24)
-		$showPass = GUICtrlCreateCheckbox("Show Password",  300, 240, 120, 24)
+		GUICtrlSetPos($passbutton, 110, 240, 180, 24)
+		$showPass = GUICtrlCreateCheckbox("Show Password", 300, 240, 120, 24)
 
 	EndIf
 
@@ -1335,9 +1322,9 @@ EndIf
 ;--------------------------Setup Tab
 $tab1 = GUICtrlCreateTabItem("Setup")
 $installb = GUICtrlCreateButton("Start Setup", 10, 334, 80)
-GUICtrlSetState ( $installb, $GUI_DEFBUTTON )
+GUICtrlSetState($installb, $GUI_DEFBUTTON)
 $remove_width = StringLen($SSID) * 10
-$remove_wifi = GUICtrlCreateButton("Remove " & $SSID, 95, 334, 10 + (1.2* $remove_width))
+$remove_wifi = GUICtrlCreateButton("Remove " & $SSID, 95, 334, 10 + (1.2 * $remove_width))
 ;--------------------------Printing Tab
 $tab2 = GUICtrlCreateTabItem("Printing")
 $print = GUICtrlCreateButton("Setup Printer", 10, 334, 80)
@@ -1419,6 +1406,11 @@ While 1
 			GUICtrlSetData($progressbar1, 0)
 			$progress_meter = 0;
 			DoDebug("***Starting Installation***")
+
+			If ($showup > 0) Then
+				$user = GUICtrlRead($userbutton)
+				$pass = GUICtrlRead($passbutton)
+			EndIf
 
 			If UserChecks() = 1 Then
 				ExitLoop
@@ -1642,7 +1634,6 @@ While 1
 				;DoDebug("[support]Prob Description=" & $probdesc)
 			EndIf
 
-			$user = $user & "@" & $domain
 
 
 
@@ -2298,30 +2289,39 @@ EndFunc   ;==>DoBeforeExit
 
 Func ResetProgress()
 	GUICtrlSetData($progressbar1, 0)
-EndFunc
+EndFunc   ;==>ResetProgress
 
 Func UserChecks()
-		Local $error = 0
-		If (StringInStr($user, $username) > 0 Or StringLen($user) < 1) Then
-			;check username
-			ResetProgress()
-			UpdateOutput("ERROR: Please enter a username")
-			$error = 1
-		ElseIf (StringLen($pass) < 1) Then
-			;check password
-			ResetProgress()
-			UpdateOutput("ERROR: Please enter a password")
-			$error = 1
-		ElseIf (StringLen($SSID_Fallback) > 0) Then
-			DoDebug("***GET HELP***")
-			UpdateOutput("***Connecting to fallback:" & $SSID_Fallback & "***")
-			UpdateProgress(20)
-			If (Not (FallbackConnect())) Then
-				ResetProgress()
-				UpdateOutput("Failed to connect to fallback network:" & $SSID_Fallback)
-				$error = 1
-			EndIf
-		EndIf
+	Local $error = 0
 
-		Return $error
-EndFunc
+	; support old style username, ignoring everything past @
+	$user = StringSplit($user, "@")
+	$user = $user[1]
+
+	;UpdateOutput($user & "=" & $username)
+	If (StringInStr($user, $username) > 0 Or StringLen($user) < 1) Then
+		;check username
+		ResetProgress()
+		UpdateOutput("ERROR: Please enter a username")
+		$error = 1
+	ElseIf (StringLen($pass) < 1) Then
+		;check password
+		ResetProgress()
+		UpdateOutput("ERROR: Please enter a password")
+		$error = 1
+	ElseIf (StringLen($SSID_Fallback) > 0) Then
+		DoDebug("***GET HELP***")
+		UpdateOutput("***Connecting to fallback:" & $SSID_Fallback & "***")
+		UpdateProgress(20)
+		If (Not (FallbackConnect())) Then
+			ResetProgress()
+			UpdateOutput("Failed to connect to fallback network:" & $SSID_Fallback)
+			$error = 1
+		EndIf
+	EndIf
+
+	$user = $user & "@" & $domain
+
+
+	Return $error
+EndFunc   ;==>UserChecks
