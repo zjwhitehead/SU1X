@@ -1,16 +1,16 @@
 #region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=compile_assets\SETUP04.ICO
-#AutoIt3Wrapper_Outfile=..\bin\getprofile.exe
+#AutoIt3Wrapper_Outfile=getprofile.exe
 #AutoIt3Wrapper_Compression=0
 #AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=SU1X wireless and wired profile capture tool
 #AutoIt3Wrapper_Res_Description=SU1X wireless and wired profile capture tool
-#AutoIt3Wrapper_Res_Fileversion=2.0.1.2
+#AutoIt3Wrapper_Res_Fileversion=2.0.1.3
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_LegalCopyright=Gareth Ayres, Swansea University
 #AutoIt3Wrapper_Res_requestedExecutionLevel=requireAdministrator
-#AutoIt3Wrapper_Run_Tidy=y
 #AutoIt3Wrapper_Res_Compatibility=Vista,Windows7
+#AutoIt3Wrapper_Run_Tidy=y
 #endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 ;-------------------------------------------------------------------------
 ; AutoIt script to automate the creation of Wireless Configuration for Eduroam
