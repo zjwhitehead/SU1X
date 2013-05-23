@@ -1,4 +1,4 @@
-#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=compile_assets\SETUP04.ICO
 #AutoIt3Wrapper_Outfile=..\bin\getprofile.exe
 #AutoIt3Wrapper_Compression=0
@@ -11,7 +11,7 @@
 #AutoIt3Wrapper_Res_requestedExecutionLevel=requireAdministrator
 #AutoIt3Wrapper_Run_Tidy=y
 #AutoIt3Wrapper_Res_Compatibility=Vista,Windows7
-#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
+#endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 ;-------------------------------------------------------------------------
 ; AutoIt script to automate the creation of Wireless Configuration for Eduroam
 ;
@@ -56,7 +56,7 @@
 ;-------------------------------------------------------------------------
 
 
-#include "Native_Wifi_Func_V4.au3"
+#include "includes\Native_Wifi_Func_V4.au3"
 #include <Date.au3>
 #include <GUIConstants.au3>
 #include <GuiListView.au3>

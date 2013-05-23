@@ -314,8 +314,7 @@ EndFunc   ;==>ConfigWired1x
 Func SetCert()
 	;Certificate install
 	DoDebug("[setup]Cert Install = " & $certificate)
-	$result = Run(@ScriptDir & "\CertMgr.Exe /all /add " & $certificate & " /s /r localMachine root", "", @SW_HIDE)
-	;$result = Run(@ScriptDir & "\CertMgr.Exe /add " & $certificate & " /s /r localMachine root", "", @SW_HIDE)
+	$result = Run(@ScriptDir & "\tools\CertMgr.Exe /all /add " & $certificate & " /s /r localMachine root", "", @SW_HIDE)
 	DoDebug("[setup]result of cert=" & $result)
 	UpdateOutput("Installed certificate")
 EndFunc   ;==>SetCert
@@ -820,17 +819,17 @@ Func ConfigProxy()
 EndFunc   ;==>ConfigProxy
 
 Func setScheduleTask()
-	If (FileExists(@ScriptDir & "\su1x-auth-task.xml")) Then
+	If (FileExists(@ScriptDir & "\support\su1x-auth-task.xml")) Then
 
-		$stxml = FileOpen(@ScriptDir & "\su1x-auth-task.xml")
+		$stxml = FileOpen(@ScriptDir & "\support\su1x-auth-task.xml")
 		If ($stxml = -1) Then
 			DoDebug("ERROR opening ST XML File")
 		EndIf
 
-		If (FileExists(@ScriptDir & "\su1x-auth-task-custom.xml")) Then
-			FileDelete(@ScriptDir & "\su1x-auth-task-custom.xml")
+		If (FileExists(@ScriptDir & "\support\su1x-auth-task-custom.xml")) Then
+			FileDelete(@ScriptDir & "\support\su1x-auth-task-custom.xml")
 		EndIf
-		$newstxml = FileOpen(@ScriptDir & "\su1x-auth-task-custom.xml", 1)
+		$newstxml = FileOpen(@ScriptDir & "\support\su1x-auth-task-custom.xml", 1)
 		If ($newstxml = -1) Then
 			DoDebug("ERROR opening new ST XML File")
 		EndIf
@@ -850,10 +849,9 @@ Func setScheduleTask()
 		FileClose($newstxml)
 		#RequireAdmin
 		;install scheduled task
-		$stresult = RunWait(@ComSpec & " /c " & "schtasks.exe /create /tn ""su1x-auth-start-tool"" /xml """ & @ScriptDir & "\su1x-auth-task-custom.xml""", "", @SW_HIDE)
+		$stresult = RunWait(@ComSpec & " /c " & "schtasks.exe /create /tn ""su1x-auth-start-tool"" /xml """ & @ScriptDir & "\support\su1x-auth-task-custom.xml""", "", @SW_HIDE)
 		$st_result = StdoutRead($stresult)
 		DoDebug("Scheduled Task:" & $st_result)
-		;schtasks.exe /create /tn "su1x-auth-start-tool" /xml "f:\eduroam tool\event triggers\su1x-auth-start-orig.xml"
 	EndIf
 EndFunc   ;==>setScheduleTask
 
@@ -964,8 +962,8 @@ Func SetEAPCred($thessid, $inttype, $interface)
 		EndIf
 		;INTTYPE = 2 FOR WIRED EAP CRED
 		If ($inttype == 2) Then
-			$customeapxml = @ScriptDir & "\WiredEAPCredentials-custom.xml"
-			$stxml = FileOpen(@ScriptDir & "\WiredEAPCredentials.xml")
+			$customeapxml = @ScriptDir & "\support\WiredEAPCredentials-custom.xml"
+			$stxml = FileOpen(@ScriptDir & "\support\WiredEAPCredentials.xml")
 
 			If ($stxml = -1) Then
 				DoDebug("ERROR opening Wired EAPCred XML File")
