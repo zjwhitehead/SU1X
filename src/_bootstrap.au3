@@ -35,7 +35,6 @@ FileCopy ( "..\*.txt", $output_dir, 1)
 FileCopy ( "..\LICENSE", $output_dir, 1)
 
 FileCopy ( "*.xml", $output_dir, 1)
-FileCopy ( "*.exe", $output_dir, 1)
 
 FileCopy ( "config.default.ini","config.ini", 0)
 FileCopy ( "config.ini", $output_dir, 1)
