@@ -9,7 +9,7 @@
   !define MUI_VERSION ""
   !define MUI_BRANDINGTEXT "Eduroam @ Swansea"
   !define MUI_HEADERIMAGE
-  !define MUI_HEADERIMAGE_BITMAP "images\jrs-header.bmp"
+  ; !define MUI_HEADERIMAGE_BITMAP "images\jrs-header.bmp"
   CRCCheck On
 
 ;--------------------------------
@@ -22,8 +22,8 @@
   OutFile "su1x-installer.exe"
   ShowInstDetails "nevershow"
   ShowUninstDetails "nevershow"
-  !define MUI_ICON "swansea.ico"
-  !define MUI_UNICON "swansea.ico"
+  !define MUI_ICON "compile_assets\SETUP07.ico"
+  !define MUI_UNICON "compile_assets\SETUP07.ico"
   ;Request application privileges for Windows Vista
   RequestExecutionLevel admin
 
@@ -35,9 +35,7 @@
 ;Pages
 ;install
   !insertmacro MUI_PAGE_WELCOME
-  !insertmacro MUI_PAGE_LICENSE "license.txt"
-  !insertmacro MUI_PAGE_COMPONENTS
-  !insertmacro MUI_PAGE_DIRECTORY
+  !insertmacro MUI_PAGE_LICENSE "..\LICENSE"
   !insertmacro MUI_PAGE_INSTFILES
   !insertmacro MUI_PAGE_FINISH
 
@@ -56,27 +54,8 @@ Section "Eduroam @ Swansea" install
 
 ;Add files
   SetOutPath "$INSTDIR"
-  File "${MUI_FILE}.exe"
-  File "config.ini"
-  File "license.txt"
-  File "CertMgr.Exe"
-  File "su1x-auth-task.xml"
-  File "su1x-setup.exe"
-  File "swansea.ico"
-  File "CamfordCA.der"
-  CreateDirectory "profiles\"
-  SetOutPath "$INSTDIR\profiles"
-  File "profiles\Wired_Profile.xml"
-  File "profiles\eduroam_WPA2_win7_0.xml"
-  SetOutPath "$INSTDIR"
-  CreateDirectory "images\"
-  SetOutPath "$INSTDIR\images"
-  File "images\lis-header.jpg"
-  File "images\bubble-connected-xp.jpg"
-  File "images\connected-7.jpg"
-  File "images\connected-vista.jpg"
-  File "images\jrs-header.jpg"
-  File "images\bubble-vista.jpg"
+  File /r "..\bin\*.*"
+
 
 
 ;create desktop shortcut
@@ -95,11 +74,6 @@ Section "Eduroam @ Swansea" install
 
 SectionEnd
 
-;--------------------------------
-;Installer Sections
-;Section /o "Swansea Web Portal" web
-;	Exec '"$INSTDIR\setHomePage.exe"'
-;SectionEnd
 
 ;--------------------------------
 ;Uninstaller Section
@@ -123,23 +97,14 @@ Section "Uninstall"
 SectionEnd
 
 
-LangString DESC_Section1 ${LANG_ENGLISH} "The Eduroam SU1X tool."
-;LangString DESC_Section2 ${LANG_ENGLISH} "Set your homepage to the Wireless Portal Page. This page has quick links to Swansea services."
-
-!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-  !insertmacro MUI_DESCRIPTION_TEXT ${install} $(DESC_Section1)
- ; !insertmacro MUI_DESCRIPTION_TEXT ${web} $(DESC_Section2)
-!insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 
 
-;--------------------------------
-;MessageBox Section
+
 
 
 ;Function that calls a messagebox when installation finished correctly
 Function .onInstSuccess
-  MessageBox MB_OK "You have successfully installed ${MUI_PRODUCT}. Starting tool..."
   Exec '"$INSTDIR\${MUI_FILE}.exe"'
 
 FunctionEnd
