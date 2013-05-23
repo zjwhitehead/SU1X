@@ -216,5 +216,5 @@ pip-log.txt
 
 #SU1X dumps
 su1x-dump-*.txt
-src\profiles\*.xml
-bin\profiles\*.xml
+src/profiles/*.xml
+bin/*
