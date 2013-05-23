@@ -214,7 +214,7 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 
-#SU1X dumps
+#SU1X
 su1x-dump-*.txt
 src/profiles/*.xml
 src/config.ini
