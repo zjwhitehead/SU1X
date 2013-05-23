@@ -13,8 +13,6 @@
 #AutoIt3Wrapper_Res_requestedExecutionLevel=requireAdministrator
 #AutoIt3Wrapper_Res_Compatibility=Vista,Windows7
 #AutoIt3Wrapper_AU3Check_Stop_OnWarning=y
-#AutoIt3Wrapper_Run_Before=del ..\bin /s /sq
-#AutoIt3Wrapper_Run_Before=mkdir ..\bin
 #AutoIt3Wrapper_Run_Tidy=y
 #endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
