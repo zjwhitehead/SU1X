@@ -11,6 +11,7 @@ Local $cmd = ""
 
 DirRemove ( $output_dir,1)
 DirCreate ( $output_dir)
+DirCreate ( '..\setup')
 
 If $compiler_cmd = "" Then
 	Msgbox(0,"Error","Compiler not found")
