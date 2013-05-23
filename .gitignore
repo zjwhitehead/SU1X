@@ -219,3 +219,4 @@ su1x-dump-*.txt
 src/profiles/*.xml
 src/config.ini
 *.der
+*.cer
