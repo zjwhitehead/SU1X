@@ -1,11 +1,11 @@
 #region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_Icon=..\..\SETUP04.ICO
+#AutoIt3Wrapper_Icon=SETUP04.ICO
 #AutoIt3Wrapper_Outfile=..\bin\getprofile.exe
 #AutoIt3Wrapper_Compression=0
 #AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=SU1X wireless and wired profile capture tool
 #AutoIt3Wrapper_Res_Description=SU1X wireless and wired profile capture tool
-#AutoIt3Wrapper_Res_Fileversion=2.0.1.1
+#AutoIt3Wrapper_Res_Fileversion=2.0.1.2
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_LegalCopyright=Gareth Ayres, Swansea University
 #AutoIt3Wrapper_Res_requestedExecutionLevel=requireAdministrator
@@ -196,7 +196,7 @@ If IsObj($colItems) Then
 		$adapter &= "Description: " & $objItem.Description & @CRLF
 		$adapter &= "Index: " & $objItem.Index & @CRLF
 		$adapter &= "NetID: " & $objItem.NetConnectionID & @CRLF
-		$adapter &= "Name: " & $objItem.Name & @CRLF
+		$adapter &= "Name: " & $objItem.name & @CRLF
 		$adapter &= "Type: " & $objItem.AdapterType & @CRLF
 		$adapter &= "MAC Address: " & $objItem.MACAddress & @CRLF
 		;DoDebug($adapter)
