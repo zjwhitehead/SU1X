@@ -218,5 +218,6 @@ pip-log.txt
 su1x-dump-*.txt
 src/profiles/*.xml
 src/config.ini
+src/su1x_installer.nsi
 *.der
 *.cer
