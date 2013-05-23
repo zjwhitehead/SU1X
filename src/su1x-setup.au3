@@ -1,6 +1,6 @@
 #RequireAdmin
 #region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_Icon=SETUP07.ICO
+#AutoIt3Wrapper_Icon=compile_assets\SETUP07.ICO
 #AutoIt3Wrapper_Outfile=..\bin\su1x-setup.exe
 #AutoIt3Wrapper_Compression=0
 #AutoIt3Wrapper_UseUpx=n
@@ -11,9 +11,11 @@
 #AutoIt3Wrapper_Res_ProductVersion=1.8.0.0
 #AutoIt3Wrapper_Res_LegalCopyright=Gareth Ayres - Swansea University
 #AutoIt3Wrapper_Res_requestedExecutionLevel=requireAdministrator
+#AutoIt3Wrapper_Res_Compatibility=Vista,Windows7
 #AutoIt3Wrapper_AU3Check_Stop_OnWarning=y
+#AutoIt3Wrapper_Run_Before=del ..\bin /s /sq
+#AutoIt3Wrapper_Run_Before=mkdir ..\bin
 #AutoIt3Wrapper_Run_Tidy=y
-#Autoit3Wrapper_Res_Compatibility=Vista,Windows7
 #endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 ;-------------------------------------------------------------------------
@@ -44,7 +46,7 @@
 ;
 
 
-#include "Native_Wifi_Func_V4.au3"
+#include "includes\Native_Wifi_Func_V4.au3"
 #include <GUIConstants.au3>
 #include <GuiListView.au3>
 #include <EditConstants.au3>

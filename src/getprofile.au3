@@ -1,5 +1,5 @@
-#region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_Icon=SETUP04.ICO
+#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#AutoIt3Wrapper_Icon=compile_assets\SETUP04.ICO
 #AutoIt3Wrapper_Outfile=..\bin\getprofile.exe
 #AutoIt3Wrapper_Compression=0
 #AutoIt3Wrapper_UseUpx=n
@@ -10,7 +10,7 @@
 #AutoIt3Wrapper_Res_LegalCopyright=Gareth Ayres, Swansea University
 #AutoIt3Wrapper_Res_requestedExecutionLevel=requireAdministrator
 #AutoIt3Wrapper_Run_Tidy=y
-#endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
+#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 ;-------------------------------------------------------------------------
 ; AutoIt script to automate the creation of Wireless Configuration for Eduroam
 ;
