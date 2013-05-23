@@ -1,18 +1,19 @@
 #RequireAdmin
 #region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_icon=SETUP07.ICO
-#AutoIt3Wrapper_outfile=..\bin\su1x-setup.exe
+#AutoIt3Wrapper_Icon=SETUP07.ICO
+#AutoIt3Wrapper_Outfile=..\bin\su1x-setup.exe
 #AutoIt3Wrapper_Compression=0
 #AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=Swansea Eduroam Tool
 #AutoIt3Wrapper_Res_Description=Swansea Eduroam Tool
-#AutoIt3Wrapper_Res_Fileversion=2.0.0.34
+#AutoIt3Wrapper_Res_Fileversion=2.0.0.35
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_ProductVersion=1.8.0.0
 #AutoIt3Wrapper_Res_LegalCopyright=Gareth Ayres - Swansea University
 #AutoIt3Wrapper_Res_requestedExecutionLevel=requireAdministrator
 #AutoIt3Wrapper_AU3Check_Stop_OnWarning=y
 #AutoIt3Wrapper_Run_Tidy=y
+#Autoit3Wrapper_Res_Compatibility=Vista,Windows7
 #endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 ;-------------------------------------------------------------------------
