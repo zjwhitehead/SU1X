@@ -10,6 +10,7 @@
 #AutoIt3Wrapper_Res_LegalCopyright=Gareth Ayres, Swansea University
 #AutoIt3Wrapper_Res_requestedExecutionLevel=requireAdministrator
 #AutoIt3Wrapper_Run_Tidy=y
+#AutoIt3Wrapper_Res_Compatibility=Vista,Windows7
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 ;-------------------------------------------------------------------------
 ; AutoIt script to automate the creation of Wireless Configuration for Eduroam
